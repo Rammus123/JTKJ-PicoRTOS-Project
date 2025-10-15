@@ -10,6 +10,7 @@
 
 #include "tkjhat/sdk.h"
 
+
 // Exercise 4. Include the libraries necessaries to use the usb-serial-debug, and tinyusb
 // Tehtävä 4 . Lisää usb-serial-debugin ja tinyusbin käyttämiseen tarvittavat kirjastot.
 
@@ -33,6 +34,10 @@ static void btn_fxn(uint gpio, uint32_t eventMask) {
     //            Tarkista SDK, ja jos et löydä vastaavaa funktiota, sinun täytyy toteuttaa se itse.
     // Exercise 1: Toggle the LED. 
     //             Check the SDK and if you do not find a function you would need to implement it yourself. 
+    uint8_t pinValue = gpio_get(LED1);
+    pinValue = !pinValue;
+    gpio_put(LED1, pinValue);
+
 }
 
 static void sensor_task(void *arg){
@@ -160,8 +165,15 @@ int main() {
     // Tehtävä 1:  Alusta painike ja LEd ja rekisteröi vastaava keskeytys.
     //             Keskeytyskäsittelijä on määritelty yläpuolella nimellä btn_fxn
 
+    gpio_init(BUTTON1);
+    gpio_set_dir(BUTTON1, GPIO_IN);
 
+    gpio_init(LED1);
+    gpio_set_dir(LED1, GPIO_OUT);
 
+    gpio_set_irq_enabled_with_callback(BUTTON1, GPIO_IRQ_EDGE_RISE, true, btn_fxn);
+
+    
     
     
     TaskHandle_t hSensorTask, hPrintTask, hUSB = NULL;
