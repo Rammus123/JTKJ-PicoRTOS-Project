@@ -533,6 +533,15 @@ void init_veml6030() {
 // Ligt in LUX
 // Note: sampling time should be > IT -> in this case it has been 100ms by defintion. 
 uint32_t veml6030_read_light() {
+    uint8_t txbuffer[1] = {VEML6030_ALS_REG};
+    uint8_t rxbuffer[2] = {0, 0};
+
+    i2c_write_blocking(i2c_default, VEML6030_I2C_ADDR, txbuffer, 1, true);
+    i2c_read_blocking(i2c_default, VEML6030_I2C_ADDR, rxbuffer, 2, false);
+
+    uint16_t raw_als = ((uint16_t)rxbuffer[1] << 8) | rxbuffer[0];
+    float als_lux = raw_als * 0.0576f;
+    return (uint32_t)als_lux;
 
     // Exercise 2: In order to get the luminance we need to read the value of the VEML6030_ALS_REG (see VEML6030 datasheet)
     //            Use functions i2c_write_blocking and i2_read_blocking to collect luminance data.
@@ -553,6 +562,9 @@ uint32_t veml6030_read_light() {
     //            Kerro arvo sopivalla kertoimella huomioiden 100 ms integraatioaika ja vahvistus 1/8
     //            käyttäen VEML6030-sovellussuunnitteluasiakirjan sivun 5 tietoja:https://www.vishay.com/docs/84367/designingveml6030.pdf
     //            Lopuksi tallenna arvo muuttujaan luxVal_uncorrected.
+
+
+
   
     uint32_t luxVal_uncorrected = 0; 
     if (luxVal_uncorrected>1000){
