@@ -10,6 +10,8 @@ PLAN:
                 kirjoitetaan if lause jolla tarkistetaan onko acceleraattorin data tietyllä välillä.
                 Jos on, printataan piste (.) tai viiva (-).
 
+                Myös jos painaa nappia 2, niin printtaa välilyönnin.
+
 
     2.    toinen task olisi että yritetään saada data muokattua joko pisteeksi, viivaksi tai välilyönniksi.
 

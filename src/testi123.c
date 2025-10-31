@@ -34,7 +34,18 @@ void imu_task(void *pvParameters) {
     {
         if (ICM42670_read_sensor_data(&ax, &ay, &az, &gx, &gy, &gz, &t) == 0) {
             
-            printf("Accel: X=%f, Y=%f, Z=%f | Gyro: X=%f, Y=%f, Z=%f\n", ax, ay, az, gx, gy, gz);
+            // printf("Accel: X=%f, Y=%f, Z=%f | Gyro: X=%f, Y=%f, Z=%f\n", ax, ay, az, gx, gy, gz);
+
+            // Tuomas wrote if-statemets, Rasmus debugged it.
+            if (ax > -1 && ax < 1 && ay > -1 && ay < 0.6 && az > 0.5 && az < 1.5) {
+                    // vaakataso
+                    printf("-\n");
+                } else if (ax > -0.5 && ax < 0.5 && ay > 0.8 && ay < 1.5 && az > -0.6 && az < 0.6) {
+                    // pystytaso
+                    printf(".\n");
+                } else {
+                    printf("\n");
+                }
 
         } else {
             printf("Failed to read imu data\n");
@@ -46,6 +57,13 @@ void imu_task(void *pvParameters) {
 
 int main() {
     stdio_init_all();
+ // alustetaan napit käyttöön (button1 = välilyönti, button2 = lähettää datan serial monitoriin)
+    gpio_init(BUTTON1);
+    gpio_set_dir(BUTTON1, GPIO_IN);
+
+    gpio_init(BUTTON2);
+    gpio_set_dir(BUTTON2, GPIO_IN);
+
     // Uncomment this lines if you want to wait till the serial monitor is connected
     while (!stdio_usb_connected()){
         sleep_ms(10);
