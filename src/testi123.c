@@ -1,25 +1,31 @@
-/*
-_________________________________________________________________________________________________________
 
-    Rasmus Kurkelan ja Tuomas Kyöstin JTKJ-lopputyö.
+//_________________________________________________________________________________________________________________________
 
-    Kuvaus: Tämä ohjelma lukee ICM-42670P IMU-sensorin kiihtyvyysdataa ja
-    muuntaa sen sarjaporttiin lähetettäväksi pisteeksi (.) tai viivaksi (-)
-    perustuen sensorin asentoon. Käyttäjä voi painaa BUTTON1 nappia
-    lähettääkseen datan, ja BUTTON2 nappia yhdessä BUTTON1 kanssa lähettääkseen
-    välilyönnin. Ohjelma käyttää FreeRTOS-käyttöjärjestelmää tehtävien hallintaan.
+//    Rasmus Kurkelan ja Tuomas Kyöstin JTKJ-lopputyö.
+
+//    Kuvaus: Tämä ohjelma lukee ICM-42670P IMU-sensorin kiihtyvyysdataa ja
+//    muuntaa sen sarjaporttiin lähetettäväksi pisteeksi (.) tai viivaksi (-)
+//    perustuen sensorin asentoon. Käyttäjä voi painaa BUTTON1 nappia
+//    lähettääkseen datan, ja BUTTON2 nappia yhdessä BUTTON1 kanssa lähettääkseen
+//    välilyönnin. Ohjelma käyttää FreeRTOS-käyttöjärjestelmää tehtävien hallintaan.
+   
+//    Ohjelmassa ei ole tilakonetta, vaan se toimii jatkuvassa silmukassa,
+//    jossa se lukee sensoridataa ja päättää, mitä lähettää sarjaporttiin
+//    käyttäjän napinpainallusten perusteella.
+
+
+//     Haluamme jakaa projektin pisteet 50/50, sillä teimme kaiken kirjaimellisesti yhdessä. Samasta syystä
+//     emme ole eritetelleet koodin valmistusta joko Tuomakselle tai Rasmukselle, vaan molemmat teimme kaiken
+//     yhdessä alusta loppuun. Teimme projektin täysin koulun koneilla ohjatuissa harjoituksissa ja 
+//     harjoituksien jälkeen.
+//_________________________________________________________________________________________________________________________
+
+//    Aloitettu 22.10.2025
+
+//    Viimeisin muokkaus: 19.11.2025
     
-    Ohjelmassa ei ole tilakonetta, vaan se toimii jatkuvassa silmukassa,
-    jossa se lukee sensoridataa ja päättää, mitä lähettää sarjaporttiin
-    käyttäjän napinpainallusten perusteella.
-_________________________________________________________________________________________________________
-
-    Aloitettu 22.10.2025
-
-    Viimeisin muokkaus: 12.11.2025
     
-    
-*/ 
+ 
 
 // Käytettävät kirjastot:
 

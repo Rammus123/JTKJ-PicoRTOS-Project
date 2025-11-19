@@ -10,6 +10,15 @@
 
 #include "tkjhat/sdk.h"
 
+// Haluamme jakaa projektin pisteet 50/50, sillä teimme kaiken kirjaimellisesti yhdessä.
+
+
+
+
+
+
+
+
 
 // Exercise 4. Include the libraries necessaries to use the usb-serial-debug, and tinyusb
 // Tehtävä 4 . Lisää usb-serial-debugin ja tinyusbin käyttämiseen tarvittavat kirjastot.
