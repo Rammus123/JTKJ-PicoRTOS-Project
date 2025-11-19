@@ -1,4 +1,7 @@
-/*      Rasmus Kurkelan ja Tuomas Kyöstin JTKJ-lopputyö.
+/*
+_________________________________________________________________________________________________________
+
+    Rasmus Kurkelan ja Tuomas Kyöstin JTKJ-lopputyö.
 
     Kuvaus: Tämä ohjelma lukee ICM-42670P IMU-sensorin kiihtyvyysdataa ja
     muuntaa sen sarjaporttiin lähetettäväksi pisteeksi (.) tai viivaksi (-)
@@ -9,13 +12,14 @@
     Ohjelmassa ei ole tilakonetta, vaan se toimii jatkuvassa silmukassa,
     jossa se lukee sensoridataa ja päättää, mitä lähettää sarjaporttiin
     käyttäjän napinpainallusten perusteella.
+_________________________________________________________________________________________________________
 
     Aloitettu 22.10.2025
 
     Viimeisin muokkaus: 12.11.2025
     
-*/
-
+    
+*/ 
 
 // Käytettävät kirjastot:
 
@@ -26,9 +30,13 @@
 #include <task.h>
 #include <tkjhat/sdk.h>
 
+    // Prototyypit
+void imu_task(void *pvParameters);
+void button_task(void *pvParameters);
 
 
-// Keskeytyskäsittelijä,Tämä ohjaa tulostaako dataa vai ei.
+
+// Keskeytyskäsittelijä,Tämä ohjaa tulostaako dataa vai ei. // tämä on globaali muuttuja.
 bool lahettaa = false;
 
 static void btn_fxn(uint gpio, uint32_t eventMask) {
@@ -40,7 +48,8 @@ static void btn_fxn(uint gpio, uint32_t eventMask) {
 
 }
 
-void imu_task(void *pvParameters) {
+
+void imu_task(void *pvParameters) { // IMU-taski
     (void)pvParameters;
     
     float ax, ay, az, gx, gy, gz, t;
@@ -99,6 +108,21 @@ void imu_task(void *pvParameters) {
 
 }
 
+void button_task(void *pvParameters) { // nappitaski
+    (void)pvParameters;
+
+    // Nappitaskin looppi.
+    while (1) {
+        // Tarkistaa nappien tilan ja päivittää 'lahettaa' muuttujan.
+        if (gpio_get(BUTTON1) == 1) {
+            lahettaa = true;
+        } else {
+            lahettaa = false;
+        }
+        vTaskDelay(pdMS_TO_TICKS(100)); // Pieni viive tarkistusten välillä.
+    }
+}
+
 int main() {
     stdio_init_all();
  // Alustetaan napit käyttöön. (BUTTON1 lähettää - ja . serial clienttiin, BUTTON2 + BUTTON1 luo välilyönnin.)
@@ -118,12 +142,15 @@ int main() {
     sleep_ms(300); // Odottaa hetken, jotta USB ja hatin initialisointi ehtii tapahtua.
     printf("Start acceleration test\n");
 
-    TaskHandle_t hIMUTask = NULL;
+    TaskHandle_t hIMUTask = NULL; // IMU-tehtävän käsittelijä.
+    TaskHandle_t hButtonTask = NULL; // Nappitehtävän käsittelijä.
 
-    xTaskCreate(imu_task, "IMUTask", 1024, NULL, 2, &hIMUTask);
+    xTaskCreate(imu_task, "IMUTask", 1024, NULL, 2, &hIMUTask); // Luo IMU-tehtävän.
+    xTaskCreate(button_task, "ButtonTask", 512, NULL, 2, &hButtonTask); // Luo nappitehtävän.
 
     //  Aloittaa FreeRTOS ajon.
     vTaskStartScheduler();
 
     return 0;
 }
+////////////////////////////////////////////////////////////////////////////////////
